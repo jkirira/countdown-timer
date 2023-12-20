@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <style lang="css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .main {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #timer-wrapper, #timeout-wrapper {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            padding: 10%;
+        }
+        #setup-wrapper {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 10%;
+        }
+        .timer-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            align-items: center;
+        }
+        .timer-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            align-items: center;
+        }
+        .centered {
+            display: flex;
+            align-items: center;
+            justify-items: center;
+        }
+        .timer-wrapper {
+            flex-direction: column;
+            width: 100%;
+        }
+        .timer-stop {
+            display: flex;
+            align-items: center;
+            justify-items: flex-end;
+        }
+        .timer-container {
+            min-height: 10rem;
+            border: 2px solid lightgray;
+            text-align: center;
+        }
+        .timer-container, .timeout-container {
+            min-height: 10rem;
+            border: 2px solid lightgray;
+        }
+        .timer-container > p,
+        .timeout-container > p {
+            font-size: 5rem;
+        }
+        .timeout-wrapper {
+            flex-direction: column;
+            width: 100%;
+            border: 2px solid lightgray;
+        }
+        .close-timeout-wrapper {
+            display: flex;
+            align-items: center;
+            justify-items: flex-end;
+            width: 100%;
+        }
+        #close-timeout {
+            cursor: pointer;
+        }
+        .btn {
+            padding: 1% 2%;
+        }
+        #timer-minutes, #timer-seconds {
+            width: 2.5rem;
+            text-align: center;
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+   <div class="main">
+        <div id="setup-wrapper">
+            <h3>Set Time</h3>
+            <br />
+            <div class="timer-inputs">
+                <input id="timer-minutes" type="tel" maxlength="2" />
+                &ensp;
+                <input id="timer-seconds" type="tel" maxlength="2" />
+            </div>
+            <br />
+            <div class="centered" style="width: 100%;">
+                <button class="btn" id="start-timer" type="button">Start</button>
+            </div>
+        </div>
+        <div id="timer-wrapper">
+            <div class="timer-stop">
+                <button id="stop-timer" type="button">Stop</button>
+            </div>
+            <div class="timer-container centered">
+                <p id="timer"></p>
+            </div>
+        </div>
+        <div id="timeout-wrapper">
+            <div class="close-timeout-wrapper">
+                <span id="close-timeout">X</span>
+            </div>
+            <div class="timeout-container centered">
+                <p>Time is up.</p>
+            </div>
+        </div>
+   </div> 
+</body>
+
+<script>
+// const defaultCountdownTime = 5.00;
+
+const timerMinutesInput = document.querySelector('#timer-minutes');
+const timerSecondsInput = document.querySelector('#timer-seconds');
+
+const setupWrapper = document.querySelector('#setup-wrapper');
+const timerWrapper = document.querySelector('#timer-wrapper');
+const timeoutWrapper = document.querySelector('#timeout-wrapper');
+const timerDisplay = document.querySelector('#timer');
+
+let timer = null;
+// let countdownTime = defaultCountdownTime;
+
+let minutes;
+let seconds;
+
+
+function displayTimer(show=true) {
+    if (show) {
+        setupWrapper.style.display = 'none';
+        timeoutWrapper.style.display = 'none';
+        timerWrapper.style.display = 'flex';
+
+    } else {
+        setupWrapper.style.display = 'flex';
+        timerWrapper.style.display = 'none';
+    }
+}
+
+
+function hideTimer() {
+    return displayTimer(false);
+}
+
+
+// function startTimer() {
+//     console.log('here');
+//     let minutes = '00' + (timerMinutesInput?.value ?? '');
+//     let seconds = '00' + (timerSecondsInput?.value ?? 60);
+
+//     countdownTimeString = minutes.slice(-2) + '.' + seconds.slice(-2);
+//     timerDisplay.textContent = countdownTimeString;
+
+//     countdownTime = parseFloat(countdownTimeString);
+
+//     displayTimer();
+
+//     timer = setInterval(() => {
+//         countdownTime -= 0.01;
+
+//         if (countdownTime < 0) {
+//             handleTimeout();
+//             return;
+//         }
+
+//         // let defaultCountdownTimeString = '' + countdownTime;
+//         // let [ minutes, seconds, ...other ] = defaultCountdownTimeString.split('.');
+
+//         let [ minutes, seconds, ...other ] = ('00' + countdownTime).split('.');
+ 
+//         countdownTimeString = minutes.slice(-2) + '.' + seconds.slice(0,2);
+//         timerDisplay.textContent = countdownTimeString;
+
+//         console.log('time', countdownTime, countdownTimeString, [minutes, seconds]);
+
+//     }, 1000);
+
+// }
+
+
+// function handleTimeout() {
+//     let defaultCountdownTimeString = '' + defaultCountdownTime;
+//     let [ minutes, seconds, ...other ] = defaultCountdownTimeString.split('.');
+//     timerMinutesInput.value = minutes ?? '00';
+//     timerSecondsInput.value = seconds ?? '00';
+
+//     timeoutWrapper.style.display = 'flex';
+//     hideTimer();
+//     clearInterval(timer);
+// }
+
+
+function startTimer() {
+    console.log('here');
+
+    minutes = timerMinutesInput?.value ?? 0;
+    seconds = timerSecondsInput?.value ?? 60;
+
+    timerDisplay.textContent = ('00' + minutes).slice(-2) + '.' + ('00' + seconds).slice(-2);;
+
+    displayTimer();
+
+    timer = setInterval(() => {
+        //minutes
+        //seconds
+
+        seconds -= 1;
+
+        if (seconds < 0) {
+            seconds = 59;
+            minutes -= 1;
+        }
+
+        if (minutes < 0) {
+            handleTimeout();
+            return;
+        }
+ 
+        timerDisplay.textContent = ('00' + minutes).slice(-2) + '.' + ('00' + seconds).slice(-2);;
+
+    }, 1000);
+
+}
+
+
+function handleTimeout() {
+    timeoutWrapper.style.display = 'flex';
+    hideTimer();
+    clearInterval(timer);
+}
+
+
+function stopTimer(){
+    hideTimer();
+    clearInterval(timer);
+}
+
+
+document.querySelector('#start-timer')?.addEventListener('click', startTimer);
+document.querySelector('#stop-timer')?.addEventListener('click', stopTimer);
+document.querySelector('#close-timeout')?.addEventListener('click', () => { timeoutWrapper.style.display = 'none' });
+
+</script>
+</html>
