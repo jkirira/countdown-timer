@@ -144,6 +144,32 @@ let timer = null;
 let minutes;
 let seconds;
 
+function validateTimeInputs(e) {
+    if (e.key.length === 1) {
+        console.log('here')
+        e.preventDefault();
+        e.stopPropagation();
+
+        // is not number -> ignore
+        if (isNaN(e.key)) {
+            return;
+        }
+
+        // is more than 60 -> ignore
+        let newVal = `${e.target.value}${e.key}`;
+        if (parseInt(newVal) > 60) {
+            alert('Maximum value is 60');
+            return;
+        }
+
+        e.target.value = newVal;
+    }
+
+}
+
+timerMinutesInput?.addEventListener('keydown', validateTimeInputs);
+timerSecondsInput?.addEventListener('keydown', validateTimeInputs);
+
 
 function displayTimer(show=true) {
     if (show) {
@@ -213,8 +239,20 @@ function hideTimer() {
 function startTimer() {
     console.log('here');
 
-    minutes = timerMinutesInput?.value ?? 0;
-    seconds = timerSecondsInput?.value ?? 60;
+    minutes = timerMinutesInput?.value;
+    seconds = timerSecondsInput?.value;
+
+    if (!minutes && !seconds) {
+        alert('Please enter either minutes or seconds');
+        return;
+    }
+
+    if ((!!minutes && isNaN(parseInt(minutes)))||
+        (!!seconds && isNaN(parseInt(seconds)))
+    ){
+        alert('Minutes and Seconds should both be numbers');
+        return;
+    }
 
     timerDisplay.textContent = formatTime(minutes) + '.' + formatTime(seconds);
 
