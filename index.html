@@ -141,7 +141,7 @@ let timer = null;
 let minutes;
 let seconds;
 
-function preventNonDigitInputs(e) {
+function ignoreNonDigitInputs(e) {
     if (e.key.length === 1 && isNaN(e.key)) {
         e.preventDefault();
         e.stopPropagation();
@@ -149,7 +149,7 @@ function preventNonDigitInputs(e) {
     }
 }
 
-function preventValueOver60(e) {
+function ignoreValueOver60(e) {
     if (e.key.length === 1) {
 
         if (isNaN(e.key)) {
@@ -171,9 +171,9 @@ function preventValueOver60(e) {
 
 }
 
-timerMinutesInput?.addEventListener('keydown', preventNonDigitInputs);
-timerSecondsInput?.addEventListener('keydown', preventNonDigitInputs);
-timerSecondsInput?.addEventListener('keydown', preventValueOver60);
+timerMinutesInput?.addEventListener('keydown', ignoreNonDigitInputs);
+timerSecondsInput?.addEventListener('keydown', ignoreNonDigitInputs);
+timerSecondsInput?.addEventListener('keydown', ignoreValueOver60);
 
 
 function displayTimer(show=true) {
