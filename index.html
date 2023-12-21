@@ -144,14 +144,20 @@ let timer = null;
 let minutes;
 let seconds;
 
-function validateTimeInputs(e) {
-    if (e.key.length === 1) {
-        console.log('here')
+function preventNonDigitInputs(e) {
+    if (e.key.length === 1 && isNaN(e.key)) {
         e.preventDefault();
         e.stopPropagation();
+        return;
+    }
+}
 
-        // is not number -> ignore
+function preventValueOver60(e) {
+    if (e.key.length === 1) {
+
         if (isNaN(e.key)) {
+            e.preventDefault();
+            e.stopPropagation();
             return;
         }
 
@@ -159,16 +165,18 @@ function validateTimeInputs(e) {
         let newVal = `${e.target.value}${e.key}`;
         if (parseInt(newVal) > 60) {
             alert('Maximum value is 60');
+            e.preventDefault();
+            e.stopPropagation();
             return;
         }
 
-        e.target.value = newVal;
     }
 
 }
 
-timerMinutesInput?.addEventListener('keydown', validateTimeInputs);
-timerSecondsInput?.addEventListener('keydown', validateTimeInputs);
+timerMinutesInput?.addEventListener('keydown', preventNonDigitInputs);
+timerSecondsInput?.addEventListener('keydown', preventNonDigitInputs);
+timerSecondsInput?.addEventListener('keydown', preventValueOver60);
 
 
 function displayTimer(show=true) {
