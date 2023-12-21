@@ -16,7 +16,7 @@
             display: flex;
             flex-direction: column;
         }
-        #timer-wrapper, #timeout-wrapper {
+        #timer-display-wrapper, #timeout-wrapper {
             display: none;
             flex-direction: column;
             width: 100%;
@@ -27,6 +27,11 @@
             flex-direction: column;
             width: 100%;
             padding: 10%;
+        }
+        #setup-time-wrapper, #setup-countdown-wrapper {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
         }
         .timer-inputs {
             display: flex;
@@ -45,7 +50,7 @@
             align-items: center;
             justify-items: center;
         }
-        .timer-wrapper {
+        .timer-display-wrapper {
             flex-direction: column;
             width: 100%;
         }
@@ -91,24 +96,61 @@
         button {
             cursor: pointer;
         }
+        .timer-types {
+            display: flex;
+        }
+        .timer-type-label {
+            cursor: pointer;
+        }
+        input[type='radio'] {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
    <div class="main">
         <div id="setup-wrapper">
-            <h3>Set Time</h3>
-            <br />
-            <div class="timer-inputs">
-                <input id="timer-minutes" type="tel" maxlength="4" />
-                &ensp;
-                <input id="timer-seconds" type="tel" maxlength="2" />
+            <div id="timer-types-wrapper">
+                <h3>Type of Timer:</h3>
+                <br />
+                <div class="timer-types">
+                    <label class="timer-type-label" for="time">Time&ensp;</label>
+                    <input id="time" name="timer-type" type="radio" value="time" checked />
+                    &ensp;&ensp;
+                    <label class="timer-type-label" for="countdown">Countdown&ensp;</label>
+                    <input id="countdown" name="timer-type" type="radio" value="countdown" />
+                </div>
             </div>
-            <br />
-            <div class="centered" style="width: 100%;">
-                <button class="btn" id="start-timer" type="button">Start</button>
+            <br /><hr /><br />
+            <div id="setup-countdown-wrapper">
+                <h3>Set Countdown</h3>
+                <br />
+                <div class="countdown-inputs">
+                    <label for="countdown-input">Countdown:&nbsp;</label>
+                    <input id="countdown-input" type="tel" maxlength="4" />
+                </div>
+                <br />
+                <div class="centered" style="width: 100%;">
+                    <button class="btn" type="button" data-button-action="start-timer" disabled>Start</button>
+                </div>
+            </div>
+            <div id="setup-time-wrapper">
+                <h3>Set Time</h3>
+                <br />
+                <div class="timer-inputs">
+                    <label for="timer-minutes">Minutes:&nbsp;</label>
+                    <input id="timer-minutes" type="tel" maxlength="4" />
+                    &ensp;
+                    <label for="timer-seconds">Seconds:&nbsp;</label>
+                    <input id="timer-seconds" type="tel" maxlength="2" />
+                </div>
+                <br />
+                <div class="centered" style="width: 100%;">
+                    <button class="btn" type="button" data-button-action="start-timer">Start</button>
+                </div>
             </div>
         </div>
-        <div id="timer-wrapper">
+        <div id="timer-display-wrapper">
             <div class="timer-stop">
                 <button id="stop-timer" type="button">Stop</button>
             </div>
@@ -132,11 +174,19 @@ const timerMinutesInput = document.querySelector('#timer-minutes');
 const timerSecondsInput = document.querySelector('#timer-seconds');
 
 const setupWrapper = document.querySelector('#setup-wrapper');
-const timerWrapper = document.querySelector('#timer-wrapper');
+const timerWrapper = document.querySelector('#timer-display-wrapper');
 const timeoutWrapper = document.querySelector('#timeout-wrapper');
 const timerDisplay = document.querySelector('#timer');
 
 let timer = null;
+let timerType = 'time';
+
+const setupTimeWrapper = document.querySelector('#setup-time-wrapper');
+setupTimeWrapper.style.display = timerType == 'time' ? 'flex' : 'none';
+
+const setupCountdownWrapper = document.querySelector('#setup-countdown-wrapper');
+setupCountdownWrapper.style.display = timerType == 'countdown' ? 'flex' : 'none';
+
 
 let minutes;
 let seconds;
@@ -184,8 +234,11 @@ function displayTimer(show=true) {
 
     } else {
         setupWrapper.style.display = 'flex';
+        setupCountdownWrapper.style.display = timerType == 'countdown' ? 'flex' : 'none';
+        setupTimeWrapper.style.display = timerType == 'time' ? 'flex' : 'none';
         timerWrapper.style.display = 'none';
     }
+
 }
 
 
@@ -292,7 +345,6 @@ function handleTimeout() {
     clearInterval(timer);
 }
 
-
 function stopTimer(){
     hideTimer();
     clearInterval(timer);
@@ -305,7 +357,23 @@ function formatTime(time) {
     return '' + time;
 }
 
-document.querySelector('#start-timer')?.addEventListener('click', startTimer);
+function setTimerType(e) {
+    if(e.currentTarget.checked) {
+        if(e.currentTarget.value == 'time') {
+            timerType = 'time';
+            setupTimeWrapper.style.display = 'flex';
+            setupCountdownWrapper.style.display = 'none';
+
+        } else if(e.currentTarget.value == 'countdown') {
+            timerType = 'countdown';
+            setupCountdownWrapper.style.display = 'flex';
+            setupTimeWrapper.style.display = 'none';
+        }
+    }
+}
+
+document.querySelectorAll("input[name='timer-type']").forEach(element => element.addEventListener('change', setTimerType));
+document.querySelectorAll("[data-button-action='start-timer']").forEach(element => element.addEventListener('click', startTimer));
 document.querySelector('#stop-timer')?.addEventListener('click', stopTimer);
 document.querySelector('#close-timeout')?.addEventListener('click', () => { timeoutWrapper.style.display = 'none' });
 
