@@ -302,7 +302,7 @@ function startTimeTimer() {
         return;
     }
 
-    timerDisplay.textContent = formatTime(minutes) + '.' + formatTime(seconds);
+    timerDisplay.textContent = formatTime(minutes) + ':' + formatTime(seconds);
 
     displayTimer();
 
@@ -322,12 +322,11 @@ function startTimeTimer() {
             return;
         }
  
-        timerDisplay.textContent = formatTime(minutes) + '.' + formatTime(seconds);
+        timerDisplay.textContent = formatTime(minutes) + ':' + formatTime(seconds);
 
     }, 1000);
 
 }
-
 
 function handleTimeout() {
     timeoutWrapper.style.display = 'flex';
