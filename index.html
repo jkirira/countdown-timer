@@ -127,11 +127,11 @@
                 <br />
                 <div class="countdown-inputs">
                     <label for="countdown-input">Countdown:&nbsp;</label>
-                    <input id="countdown-input" type="tel" maxlength="4" />
+                    <input id="countdown-input" type="tel" />
                 </div>
                 <br />
                 <div class="centered" style="width: 100%;">
-                    <button class="btn" type="button" data-button-action="start-timer" disabled>Start</button>
+                    <button class="btn" type="button" data-button-action="start-timer">Start</button>
                 </div>
             </div>
             <div id="setup-time-wrapper">
@@ -172,6 +172,7 @@
 <script>
 const timerMinutesInput = document.querySelector('#timer-minutes');
 const timerSecondsInput = document.querySelector('#timer-seconds');
+const countdownInput = document.querySelector('#countdown-input');
 
 const setupWrapper = document.querySelector('#setup-wrapper');
 const timerWrapper = document.querySelector('#timer-display-wrapper');
@@ -187,7 +188,7 @@ setupTimeWrapper.style.display = timerType == 'time' ? 'flex' : 'none';
 const setupCountdownWrapper = document.querySelector('#setup-countdown-wrapper');
 setupCountdownWrapper.style.display = timerType == 'countdown' ? 'flex' : 'none';
 
-
+let countdownValue;
 let minutes;
 let seconds;
 
@@ -223,6 +224,7 @@ function ignoreValueOver60(e) {
 
 timerMinutesInput?.addEventListener('keydown', ignoreNonDigitInputs);
 timerSecondsInput?.addEventListener('keydown', ignoreNonDigitInputs);
+countdownInput?.addEventListener('keydown', ignoreNonDigitInputs);
 timerSecondsInput?.addEventListener('keydown', ignoreValueOver60);
 
 
@@ -241,62 +243,50 @@ function displayTimer(show=true) {
 
 }
 
-
 function hideTimer() {
     return displayTimer(false);
 }
 
-
-// function startTimer() {
-//     console.log('here');
-//     let minutes = '00' + (timerMinutesInput?.value ?? '');
-//     let seconds = '00' + (timerSecondsInput?.value ?? 60);
-
-//     countdownTimeString = minutes.slice(-2) + '.' + seconds.slice(-2);
-//     timerDisplay.textContent = countdownTimeString;
-
-//     countdownTime = parseFloat(countdownTimeString);
-
-//     displayTimer();
-
-//     timer = setInterval(() => {
-//         countdownTime -= 0.01;
-
-//         if (countdownTime < 0) {
-//             handleTimeout();
-//             return;
-//         }
-
-//         // let defaultCountdownTimeString = '' + countdownTime;
-//         // let [ minutes, seconds, ...other ] = defaultCountdownTimeString.split('.');
-
-//         let [ minutes, seconds, ...other ] = ('00' + countdownTime).split('.');
- 
-//         countdownTimeString = minutes.slice(-2) + '.' + seconds.slice(0,2);
-//         timerDisplay.textContent = countdownTimeString;
-
-//         console.log('time', countdownTime, countdownTimeString, [minutes, seconds]);
-
-//     }, 1000);
-
-// }
-
-
-// function handleTimeout() {
-//     let defaultCountdownTimeString = '' + defaultCountdownTime;
-//     let [ minutes, seconds, ...other ] = defaultCountdownTimeString.split('.');
-//     timerMinutesInput.value = minutes ?? '00';
-//     timerSecondsInput.value = seconds ?? '00';
-
-//     timeoutWrapper.style.display = 'flex';
-//     hideTimer();
-//     clearInterval(timer);
-// }
-
-
 function startTimer() {
-    console.log('here');
+    switch(timerType) {
+        case 'time':
+            startTimeTimer();
+            break;
+        case 'countdown':
+            startCountdownTimer();
+            break;
+        case 'default':
+            break;
+    }
+}
 
+function startCountdownTimer() {
+    countdownValue = countdownInput?.value;
+
+    if (!countdownValue) {
+        alert('Please enter a countdown value');
+        return;
+    }
+
+    timerDisplay.textContent = countdownValue;
+
+    displayTimer();
+
+    timer = setInterval(() => {
+        countdownValue -= 1;
+
+        if (countdownValue < 0) {
+            handleTimeout();
+            return;
+        }
+
+        timerDisplay.textContent = countdownValue;
+
+    }, 1000);
+
+}
+
+function startTimeTimer() {
     minutes = timerMinutesInput?.value;
     seconds = timerSecondsInput?.value;
 
