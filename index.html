@@ -10,6 +10,17 @@
             padding: 0;
             box-sizing: border-box;
         }
+        .header {
+            display: flex;
+            min-height: 5rem;
+        }
+        .github-link-wrapper {
+            display: flex;
+            align-items: center;
+            justify-items: center;
+            margin-left: auto;
+            padding: 0 1rem;
+        }
         .main {
             width: 100%;
             min-height: 100vh;
@@ -112,6 +123,13 @@
 </head>
 <body>
    <div class="main">
+        <div class="header">
+            <div class="github-link-wrapper">
+                <a class="github-link" href="https://github.com/jkirira/countdown-timer">
+                    <img src="github-mark.svg" alt="github icon" width="25" height="25">
+                </a>
+            </div>
+        </div>
         <div id="timeout-wrapper">
             <div class="close-timeout-wrapper">
                 <p id="close-timeout">x</p>
