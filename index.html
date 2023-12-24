@@ -16,11 +16,14 @@
             display: flex;
             flex-direction: column;
         }
+        #timer {
+            margin: auto;
+        }
         #timer-display-wrapper, #timeout-wrapper {
             display: none;
             flex-direction: column;
             width: 100%;
-            padding: 10%;
+            padding: 10% 10% 0;
         }
         #setup-wrapper {
             display: flex;
@@ -56,8 +59,7 @@
         }
         .timer-stop {
             display: flex;
-            align-items: center;
-            justify-items: flex-end;
+            width: 100%;
         }
         .timer-container {
             min-height: 10rem;
@@ -70,7 +72,10 @@
         }
         .timer-container > p,
         .timeout-container > p {
-            font-size: 5rem;
+            font-size: 3rem;
+        }
+        .timeout-container {
+            padding: 2%;
         }
         .timeout-wrapper {
             flex-direction: column;
@@ -79,11 +84,9 @@
         }
         .close-timeout-wrapper {
             display: flex;
-            align-items: center;
-            justify-items: flex-end;
-            width: 100%;
         }
         #close-timeout {
+            margin-left: auto;
             cursor: pointer;
         }
         .btn {
@@ -109,6 +112,14 @@
 </head>
 <body>
    <div class="main">
+        <div id="timeout-wrapper">
+            <div class="close-timeout-wrapper">
+                <p id="close-timeout">x</p>
+            </div>
+            <div class="timeout-container centered">
+                <p style="margin: auto;">Time is up.</p>
+            </div>
+        </div>
         <div id="setup-wrapper">
             <div id="timer-types-wrapper">
                 <h3>Type of Timer:</h3>
@@ -151,19 +162,12 @@
             </div>
         </div>
         <div id="timer-display-wrapper">
-            <div class="timer-stop">
-                <button id="stop-timer" type="button">Stop</button>
-            </div>
             <div class="timer-container centered">
                 <p id="timer"></p>
             </div>
-        </div>
-        <div id="timeout-wrapper">
-            <div class="close-timeout-wrapper">
-                <span id="close-timeout">X</span>
-            </div>
-            <div class="timeout-container centered">
-                <p>Time is up.</p>
+            <br />
+            <div class="timer-stop">
+                <button class="btn" id="stop-timer" type="button" style="margin: auto;">Stop</button>
             </div>
         </div>
    </div> 
